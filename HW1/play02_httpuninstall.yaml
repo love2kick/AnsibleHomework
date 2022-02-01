@@ -1,0 +1,23 @@
+---
+- name: Uninstall httpd
+  hosts: [nodes]
+  become: true
+  tasks:
+  - name: 1. Uninstall apache
+    yum:
+      name: httpd
+      autoremove: yes	
+      state: absent
+  - name: 2. Remove index.html
+    file:
+      path: /var/www/html/index.html
+      state: absent
+  - name: 3. Close port 80
+    firewalld:
+      port: 80/tcp
+      permanent: true
+      state: disabled
+  - name: 4. Restart firewalld
+    service:
+      name: firewalld
+      state: restarted

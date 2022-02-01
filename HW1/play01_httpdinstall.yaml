@@ -1,0 +1,28 @@
+---
+- name: Install & enable httpd
+  hosts: [nodes]
+  become: yes
+  become_user: root
+  tasks:
+  - name: 01. Install latest Apache
+    yum:
+      name: httpd
+      state: latest
+  - name: 02. Apache enabled and running
+    service:
+      name: httpd
+      enabled: true
+      state: started
+  - name: 03. Make index.html
+    copy:
+      dest: /var/www/html/index.html
+      content: "Welcome to my web server"
+  - name: 04. Open port 80 for http
+    firewalld:
+      service: http
+      permanent: true
+      state: enabled
+  - name: 05. Restart firewalld
+    service:
+      name: firewalld
+      state: restarted
