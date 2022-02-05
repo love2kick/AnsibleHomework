@@ -1,0 +1,15 @@
+---
+- name: Create users from list
+  hosts: [nodes]
+  become: true
+  vars_files:
+  - ../users.yml # this file encrypted via ansible-vault and vault password was passed via --vault-id ./vault.txt
+  - name: Create user
+    user:
+      name: "{{ item.name }}"
+      shell: /bin/bash
+      password: "{{ item.password | password_hash('sha512')}}"
+      comment: "{{ item.name }}@example.com"
+      home: "/home/{{ item.name }}"
+      createhome: "yes"
+    loop: "{{ users }}"
