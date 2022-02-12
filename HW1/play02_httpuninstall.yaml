@@ -6,7 +6,7 @@
   - name: 1. Uninstall apache
     yum:
       name: httpd
-      autoremove: yes	
+      autoremove: true
       state: absent
   - name: 2. Remove index.html
     file:
