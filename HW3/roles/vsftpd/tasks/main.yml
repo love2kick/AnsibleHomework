@@ -1,0 +1,42 @@
+---
+- name: Install required packages
+  yum:
+    name: "{{ item }}"
+    state: latest
+  loop: "{{ packages }}"
+
+- name: Copy FTP config using Jinja2 Template
+  template:
+    src: vsftpd.j2
+    dest: /etc/vsftpd/vsftpd.conf
+  notify:
+   - restart vsftpd
+
+- name: Create ftp pub folder and set permissions
+  file:
+   path: /var/ftp/pub
+   state: directory
+   mode: 0755
+
+- name: Creafe ftp upload folder and set permissions
+  file:
+   path: /var/ftp/pub/upload
+   state: directory
+   mode: 0777
+
+- name: Tasks for Selinux 
+  include_tasks: selinux.yml 
+
+- name: Open firewall ports for FTP
+  firewalld:
+   service: ftp
+   permanent: yes
+   state: enabled
+   immediate: yes
+
+- name: Make sure services are started and enabled
+  service:
+   name: "{{ item }}"
+   enabled: yes
+   state: started
+  loop: "{{ services }}"

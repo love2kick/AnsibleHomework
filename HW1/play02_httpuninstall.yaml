@@ -12,9 +12,9 @@
     file:
       path: /var/www/html/index.html
       state: absent
-  - name: 3. Close port 80
+  - name: 3. Close http access
     firewalld:
-      port: 80/tcp
+      service: http
       permanent: true
       state: disabled
   - name: 4. Restart firewalld

@@ -1,0 +1,6 @@
+---
+- name: Restart Firewalld
+  become: true
+  service:
+    name: firewalld
+    state: restarted

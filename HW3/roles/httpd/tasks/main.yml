@@ -1,0 +1,27 @@
+---
+- name: Install latest {{ service }}
+  yum:
+    name: "{{ service }}"
+    state: latest
+  tags: httpd
+
+- name: Apache enabled and running
+  service:
+    name: "{{ service }}"
+    enabled: true
+    state: started
+  tags: httpd
+
+- name: Make index.html
+  copy:
+    dest: /var/www/html/index.html
+    content: "Welcome to my web server"
+  tags: httpd
+
+- name: Open port 80 for httpd
+  firewalld:
+    service: http
+    permanent: true
+    state: enabled
+  notify: Restart Firewalld
+  tags: httpd

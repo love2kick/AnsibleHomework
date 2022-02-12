@@ -1,0 +1,12 @@
+services:
+  - vsftpd
+  - firewalld
+
+ftp_path:
+  - /var/ftp/pub
+  - /var/ftp/pub/upload
+
+packages:
+  - vsftpd
+  - python3-libsemanage
+  - policycoreutils-python-utils
